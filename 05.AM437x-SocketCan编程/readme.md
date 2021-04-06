@@ -87,6 +87,8 @@ CAN 总线的有以下三方面特点：
 
 ​	在 Linux 系统中，CAN 总线接口设备作为网络设备被系统进行统一管理。在控制台下， CAN 总线的配置和以太网的配置使用相同的命令。
 
+### (1) 配置
+
 在控制台上输入命令：
 
 ```shell
@@ -158,6 +160,31 @@ ifconfig can0 down
 ```shell
 ip -details -statistics link show can0
 ```
+
+
+
+### (2) 测试发送
+
+```shell
+cansend can0 0x11 0x22 0x33 0x44 0x55 0x66 0x77 0x88
+# 发送默认ID为0x1的can标准帧，数据为0x11 22 33 44 55 66 77 88
+# 每次最大8个byte
+
+cansend can0 -i 0x800 0x11 0x22 0x33 0x44 0x55 0x66 0x77 0x88 -e
+# -e 表示扩展帧，CAN_ID最大29bit，标准帧CAN_ID最大11bit 
+# -i表示CAN_ID
+
+cansend can0 -i 0x02 0x11 0x12 --loop=20
+# --loop 表示发送20个包
+```
+
+### (3) 测试接收
+
+```shell
+candump can0
+# 接收CAN0数据
+```
+
 
 
 
