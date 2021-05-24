@@ -16,7 +16,17 @@ paho.mqtt.c MQTT客户端
 
 ### b) 交叉编译
 
-#### 配置
+#### 配置(Configure方式)
+
+Configure方式不需要修改Makefile
+
+```shell
+./Configure linux-armv4 no-asm shared --prefix=$PWD/_install --cross-compile-prefix=arm-linux-gnueabi-
+```
+
+#### 配置(config方式)
+
+config方式需要修改Makefile
 
 ```shell
 ./config no-asm shared --prefix=$PWD/install --cross-compile-prefix=arm-linux-gnueabihf-
