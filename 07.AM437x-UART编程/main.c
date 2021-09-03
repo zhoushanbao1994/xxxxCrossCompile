@@ -14,6 +14,9 @@
 
 // 波特率
 int speed_arr[] = {
+    B4000000,
+    B2000000,
+    B1000000,
     B921600, 
     B460800, 
     B230400, 
@@ -28,6 +31,9 @@ int speed_arr[] = {
     B300,
 };
 int name_arr[] = {
+    4000000,
+    2000000,
+    1000000,
     921600, 
     460800, 
     230400, 
@@ -159,7 +165,7 @@ int set_Parity(int fd,int databits,int stopbits,int parity)
 
 int OpenDev(char *Dev)
 {
-    int fd = open( Dev, O_RDWR );
+    int fd = open( Dev, O_RDWR | O_NOCTTY | O_NONBLOCK );
     if (-1 == fd) {
         perror("Can't Open Serial Port");
         return -1;
@@ -170,67 +176,102 @@ int OpenDev(char *Dev)
 
 void thread1(void)// 线程1
 {
-    int  fd;
-    int i=0,j=0;
-    int nread;          /* Read the counts of data */
-    char buff[512];     /* Recvice data buffer */
+    time_t timep;
+    struct tm *p;
+    
+    int     uart_fd;
+    int     nread;          /* Read the counts of data */
+    char    recv_buff[512]; /* Recvice data buffer */
 
-    char write_buff[512];
+    //int     speed = 921600;     // 串口波特率
+    int     speed = 1000000;     // 串口波特率
+    struct  termios saveterm,nt;
 
-    int totol_read = 0;
+    fd_set  recv_fds;       /* 定义接收fds  一个存放文件描述符(file descriptor)，即文件句柄的聚合，实际上是一long类型的数组 */
+    int     fd_result;
+    struct  timeval tv;     /* 超时时间 */
 
-    int speed = 115200;
-    struct termios saveterm,nt;
-
-    fd = OpenDev("/dev/ttyO5");
-
-    if (fd > 0) {
-        set_speed(fd, speed);
+    /******** 打开串口，若打开成功配置波特率 ********/
+    uart_fd = OpenDev("/dev/ttyS1");
+    if (uart_fd > 0) {
+        set_speed(uart_fd, speed);
     } else {
         fprintf(stderr, "Error opening: %s\n", strerror(errno));
         pthread_exit(0);
     }
 
-    if (set_Parity(fd,8,1,'N')== FALSE) {
+    /******** 配置数据位、校验位、停止位 ********/
+    if (set_Parity(uart_fd, 8, 1, 'N')== FALSE) {
         fprintf(stderr, "Set Parity Error\n");
-        close(fd);
+        close(uart_fd);
         pthread_exit(0);
     }
 
-    tcgetattr(fd,&saveterm);
-    nt=saveterm;
-    nt.c_lflag &= ~(ICANON | ECHO | ECHOE);
-
+    ///******** 调整终端接口 ********/
+    tcgetattr(uart_fd, &saveterm);
+    nt = saveterm;
+    nt.c_cflag |= CLOCAL | CREAD;
+    nt.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);
+    nt.c_oflag &= ~OPOST;
+    nt.c_iflag &= ~(BRKINT | ICRNL | INPCK | ISTRIP | IXON);
     //set hardware flow control
     //nt.c_cflag |= CRTSCTS;
+    tcsetattr(uart_fd, TCSANOW, &nt);
 
-    tcsetattr(fd,TCSANOW,&nt);
+
+
 
     printf("RECV  total\n");
 
     while (1)
     {
-        totol_read = 0;
-        memset(write_buff, 0, sizeof(write_buff));
+        /******** 注意每次都要重新设置 ********/
+        FD_ZERO(&recv_fds);
+        FD_SET(uart_fd, &recv_fds);     /* 把句柄加入读监视集合里去 */
 
-        while(totol_read < 26) {
-            nread = read(fd, buff, sizeof(buff));
-            if (nread > 0) {
-                memcpy(write_buff + totol_read, buff, nread);
-                totol_read += nread;
-                write_buff[totol_read] = '\0';
-                //printf("RECV %d total\n", nread);
-                //printf("RECV: %s\n",  buff);
-            }
-            else {
-                printf("RECV %d total\n", nread);
+        /******** select超时时间设置(select会把tv清零，每次需要给tv赋值) ********/
+        tv.tv_sec   = 10;           //设定超时时间 
+        tv.tv_usec  = 0;            //10000us = 10ms
+
+        /****************************** select ****************************************/
+        fd_result = select(uart_fd + 1, &recv_fds, NULL, NULL, &tv);  /* 注意是fd加1 */
+        /******** select函数出错 ********/
+        if(fd_result < 0) {
+            printf("Timer: %04d-%02d-%02d %02d:%02d:%02d ---- ", 
+                    (1900+p->tm_year), (1+p->tm_mon), p->tm_mday, p->tm_hour, p->tm_min, p->tm_sec);
+            printf("select err \r\n");
+            usleep(10000);
+            continue;
+        }
+        /******** select函数超时结束 ********/
+        else if(fd_result == 0) {
+            /* 在设定的tv时间内，socket的状态没有发生变化 */
+            //printf("Timer: %04d-%02d-%02d %02d:%02d:%02d ---- ", 
+            //        (1900+p->tm_year), (1+p->tm_mon), p->tm_mday, p->tm_hour, p->tm_min, p->tm_sec);
+            //printf("select time out  --- tv.tv_sec = %d, tv.tv_usec = %d\r\n", tv.tv_sec, tv.tv_usec);
+            usleep(10000);
+            continue;
+        }
+        /******** select函数触发 ********/
+        else {
+            /* 先判断一下句柄是否可读 */
+            if(FD_ISSET(uart_fd, &recv_fds)) {
+                nread = read(uart_fd, recv_buff, 0xff);   /*  读取串口数据  */
+                /*** 数据解析 */
+                // 获取当前时间并打印
+                time(&timep);
+                p = gmtime(&timep);
+                printf("Timer: %04d-%02d-%02d %02d:%02d:%02d ---- ", 
+                    (1900+p->tm_year), (1+p->tm_mon), p->tm_mday, p->tm_hour, p->tm_min, p->tm_sec);
+                for(int i = 0; i < nread; i++)
+                    printf("%02x ", recv_buff[i]);
+                printf("\r\n");
+                write(uart_fd, recv_buff, nread);
             }
         }
-
-        write(fd, write_buff, strlen(write_buff));
     }
 
-    close(fd);
+    close(uart_fd);
     pthread_exit(0);
 }
 
