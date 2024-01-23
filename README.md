@@ -1,2 +1,2 @@
-# AM437xCrossCompile
-AM437x交叉编译
+# xxxxCrossCompile
+控制器交叉编译说明
