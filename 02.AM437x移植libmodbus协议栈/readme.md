@@ -550,4 +550,41 @@ PC端使用“Modbus Salve”，与板子对测，正常
    tftp -p -l filename IP
    ```
 
+
+
+
+## RK3568编译说明
+
+1. 配置环境变量
+
+   ```shell
+   export PATH=$PATH:/opt/rk3568/gcc-arm-10.3-2021.07-x86_64-aarch64-none-linux-gnu/bin/
+   
+   aarch64-none-linux-gnu-g++ -v
+   Using built-in specs.
+   COLLECT_GCC=aarch64-none-linux-gnu-g++
+   COLLECT_LTO_WRAPPER=/opt/rk3568/gcc-arm-10.3-2021.07-x86_64-aarch64-none-linux-gnu/bin/../libexec/gcc/aarch64-none-linux-gnu/10.3.1/lto-wrapper
+   Target: aarch64-none-linux-gnu
+   ......
+   gcc version 10.3.1 20210621 (GNU Toolchain for the A-profile Architecture 10.3-2021.07 (arm-10.29))
+   ```
+
+2. 配置编译选项
+
+   ```shell
+   ./configure --build=i386 --host=aarch64-none-linux-gnu --enable-static --prefix=/root/Code/libmodbus-3.1.10_fork/install/
+   ```
+
+3. 编译
+
+   ```shell
+   make
+   ```
+
+4. 安装
+
+   ```shell
+   make install
+   ```
+
    
