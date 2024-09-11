@@ -35,7 +35,8 @@ https://github.com/open-source-parsers/jsoncpp/archive/refs/tags/1.9.5.tar.gz
    SET(CMAKE_SYSTEM_PROCESSOR arm)
    
    # 定义 TOOLCHAIN_PATH ，供后续使用
-   SET(TOOLCHAIN_PATH /opt/rk3568/gcc-arm-10.3-2021.07-x86_64-aarch64-none-linux-gnu)
+   SET(TOOLCHAIN_PATH /opt/rk3568/gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu)
+   #SET(TOOLCHAIN_PATH /opt/rk3568/gcc-arm-10.3-2021.07-x86_64-aarch64-none-linux-gnu)
    #SET(CMAKE_SYSROOT ${TOOLCHAIN_PATH}/aarch64-none-linux-gnu)
    # 指定C交叉编译器,必须配置
    SET(CMAKE_C_COMPILER   ${TOOLCHAIN_PATH}/bin/aarch64-none-linux-gnu-gcc)
@@ -157,6 +158,5 @@ https://github.com/open-source-parsers/jsoncpp/archive/refs/tags/1.9.5.tar.gz
    -- Installing: /opt/rk3568/jsoncpp/install/include/json/writer.h
    ```
    
-
 4. 此时“/jsoncpp/install/”就是对应的库文件、头文件
 

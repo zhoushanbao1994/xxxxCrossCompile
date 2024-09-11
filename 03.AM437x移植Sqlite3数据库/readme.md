@@ -346,3 +346,38 @@ libsqlite3.la        libsqlite3.so.0      pkgconfig
 
 进入交缠编译器的路径“/opt/am437x/ti-processor-sdk-linux-rt-am437x-evm-03.01.00.06/linux-devkit/sysroots/armv7ahf-neon-linux-gnueabi/usr/lib”，将“libncurses.so       libreadline.so      libreadline.so.5    libreadline.so.5.2”文件拷贝至开发板“/usr/lib”路径
 
+
+
+# RK3568编译说明
+
+1. 配置环境变量
+
+   ```shell
+   export PATH=$PATH:/opt/rk3568/gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu/bin/
+   
+   aarch64-none-linux-gnu-gcc -v
+   Using built-in specs.
+   COLLECT_GCC=aarch64-none-linux-gnu-gcc
+   COLLECT_LTO_WRAPPER=/opt/rk3568/gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu/bin/../libexec/gcc/aarch64-none-linux-gnu/9.2.1/lto-wrapper
+   Target: aarch64-none-linux-gnu
+   Configured with: ........
+   gcc version 9.2.1 20191025 (GNU Toolchain for the A-profile Architecture 9.2-2019.12 (arm-9.10))
+   ```
+
+2. 下载最新版本[sqlite-autoconf-3460100.tar.gz](https://www.sqlite.org/2024/sqlite-autoconf-3460100.tar.gz)；创建安装目录 mkdir install；解压后进入文件夹 tar -zxvf sqlite-autoconf-3460100.tar.gz
+
+3. 指定编译参数，生成makefile
+
+   ```shell
+   # 指定编译参数
+   ./configure CC=aarch64-none-linux-gnu-gcc --prefix=/opt/rk3568/sqlite/install/ --host=aarch64-none-linux-gnu --build=i386
+   ```
+
+4. 编译&安装
+
+   ```shell
+   make
+   make install
+   ```
+
+   
