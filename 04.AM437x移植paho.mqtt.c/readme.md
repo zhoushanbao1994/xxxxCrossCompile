@@ -21,6 +21,10 @@ paho.mqtt.c MQTT客户端
 Configure方式不需要修改Makefile
 
 ```shell
+# AM4372
+./Configure linux-armv4 no-asm shared --prefix=$PWD/_install --cross-compile-prefix=arm-linux-gnueabi-
+
+#T113
 ./Configure linux-armv4 no-asm shared --prefix=$PWD/_install --cross-compile-prefix=arm-linux-gnueabi-
 ```
 
@@ -68,6 +72,13 @@ cp -pR * /opt/am437x/ti-processor-sdk-linux-rt-am437x-evm-03.01.00.06/linux-devk
 
 # 进入install/include/文件夹，将openssl文件夹整个文件夹复制到交叉编译的系统包含路径中
 cp -r openssl/ /opt/am437x/ti-processor-sdk-linux-rt-am437x-evm-03.01.00.06/linux-devkit/sysroots/armv7ahf-neon-linux-gnueabi/include
+
+
+####################################################################
+# T113
+cp -pR * /opt/t113/gcc-linaro-5.3.1-2016.05-x86_64_arm-linux-gnueabi/arm-linux-gnueabi/lib
+cp -r openssl/ /opt/t113/gcc-linaro-5.3.1-2016.05-x86_64_arm-linux-gnueabi/arm-linux-gnueabi/include/
+
 ```
 
 
