@@ -1,6 +1,6 @@
 ## 1. 配置交叉编译环境
 
-## 2. **移植OpenSSL**
+## 2. （可选）**移植OpenSSL**
 
 ​	参照“**04.AM437x移植paho.mqtt.c**”
 
@@ -835,6 +835,15 @@ mosquitto-2.0.11/Makefile
 mosquitto-2.0.11/edl-v10
 ```
 
+### 设置是否使用OpenSSl
+
+```
+编辑文件config.mk
+注释WITH_TLS:=yes
+```
+
+
+
 ### 编译
 
 ```shell
@@ -854,6 +863,11 @@ mkdir _install
 make WITH_SRV=no WITH_CJSON=no CC=/opt/am4372/gcc-linaro-5.5.0-2017.10-x86_64_arm-linux-gnueabi/bin/arm-linux-gnueabi-gcc CXX=/opt/am4372/gcc-linaro-5.5.0-2017.10-x86_64_arm-linux-gnueabi/bin/arm-linux-gnueabi-g++ CFLAGS="-I/opt/openssl/openssl-1.1.1k/install/include/" LDFLAGS="-L/opt/openssl/openssl-1.1.1k/install/lib -lssl -lcrypto" DESTDIR=$(pwd)/_install install
 ......结果......
  
+ 
+make WITH_SRV=no WITH_CJSON=no CC=/opt/rk3568/gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu/bin/aarch64-none-linux-gnu-gcc CXX=/opt/rk3568/gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu/bin/aarch64-none-linux-gnu-g++ DESTDIR=$(pwd)/_install install
+
+
+make WITH_SRV=no WITH_CJSON=no CC=/opt/t113/gcc-linaro-5.3.1-2016.05-x86_64_arm-linux-gnueabi/bin/arm-linux-gnueabi-gcc CXX=/opt/t113/gcc-linaro-5.3.1-2016.05-x86_64_arm-linux-gnueabi/bin/arm-linux-gnueabi-g++ DESTDIR=$(pwd)/_install install
 ```
 
 ### 编译结果
