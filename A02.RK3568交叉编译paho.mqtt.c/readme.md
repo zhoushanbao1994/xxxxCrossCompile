@@ -57,7 +57,7 @@ RC=/opt/rk3568/gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu/bin/$(CROSS_COM
 
 
 
-#### ~~配置(config方式) 不可用~~
+#### ~~配置(config方式) 交叉编译不适用，会自动检测平台~~
 
 ~~config方式~~
 
@@ -128,6 +128,10 @@ cd paho.mqtt.c-1.3.14/
 
 
 ### b) 交叉编译
+
+```shell
+make CC=/opt/rk3568/gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu/bin/aarch64-none-linux-gnu-gcc CFLAGS:="-I /opt/rk3568/openssl/openssl-OpenSSL_1_1_1w/_install/include" LDFLAGS:="-L /opt/rk3568/openssl/openssl-OpenSSL_1_1_1w/_install/lib"
+```
 
 
 
