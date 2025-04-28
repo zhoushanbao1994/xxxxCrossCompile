@@ -587,4 +587,67 @@ PC端使用“Modbus Salve”，与板子对测，正常
    make install
    ```
 
+
+
+
+## T113编译说明
+
+1. 配置环境变量
+
+   ```shell
+   export ARCH=arm
+   export PATH=$PATH:/opt/t113/gcc-linaro-5.3.1-2016.05-x86_64_arm-linux-gnueabi/bin
+   export CROSS_COMPILE=arm-linux-gnueabi-
    
+   arm-linux-gnueabi-g++ -v
+   Using built-in specs.
+   COLLECT_GCC=arm-linux-gnueabi-g++
+   COLLECT_LTO_WRAPPER=/opt/t113/gcc-linaro-5.3.1-2016.05-x86_64_arm-linux-gnueabi/bin/../libexec/gcc/arm-linux-gnueabi/5.3.1/lto-wrapper
+   Target: arm-linux-gnueabi
+   Configured with: /home/tcwg-buildslave/workspace/tcwg-make-release/label/docker-trusty-amd64-tcwg/target/arm-linux-gnueabi/snapshots/gcc-linaro-5.3-2016.05/configure SHELL=/bin/bash --with-mpc=/home/tcwg-buildslave/workspace/tcwg-make-release/label/docker-trusty-amd64-tcwg/target/arm-linux-gnueabi/_build/builds/destdir/x86_64-unknown-linux-gnu --with-mpfr=/home/tcwg-buildslave/workspace/tcwg-make-release/label/docker-trusty-amd64-tcwg/target/arm-linux-gnueabi/_build/builds/destdir/x86_64-unknown-linux-gnu --with-gmp=/home/tcwg-buildslave/workspace/tcwg-make-release/label/docker-trusty-amd64-tcwg/target/arm-linux-gnueabi/_build/builds/destdir/x86_64-unknown-linux-gnu --with-gnu-as --with-gnu-ld --disable-libstdcxx-pch --disable-libmudflap --with-cloog=no --with-ppl=no --with-isl=no --disable-nls --enable-c99 --with-tune=cortex-a9 --with-arch=armv7-a --with-fpu=vfpv3-d16 --with-float=softfp --with-mode=thumb --disable-multilib --enable-multiarch --with-build-sysroot=/home/tcwg-buildslave/workspace/tcwg-make-release/label/docker-trusty-amd64-tcwg/target/arm-linux-gnueabi/_build/sysroots/arm-linux-gnueabi --enable-lto --enable-linker-build-id --enable-long-long --enable-shared --with-sysroot=/home/tcwg-buildslave/workspace/tcwg-make-release/label/docker-trusty-amd64-tcwg/target/arm-linux-gnueabi/_build/builds/destdir/x86_64-unknown-linux-gnu/arm-linux-gnueabi/libc --enable-languages=c,c++,fortran,lto --enable-checking=release --disable-bootstrap --build=x86_64-unknown-linux-gnu --host=x86_64-unknown-linux-gnu --target=arm-linux-gnueabi --prefix=/home/tcwg-buildslave/workspace/tcwg-make-release/label/docker-trusty-amd64-tcwg/target/arm-linux-gnueabi/_build/builds/destdir/x86_64-unknown-linux-gnu
+   Thread model: posix
+   gcc version 5.3.1 20160412 (Linaro GCC 5.3-2016.05) 
+   ```
+
+   
+
+2. 下载最新代码
+
+   ```shell
+   sudo wget https://github.com/stephane/libmodbus/releases/download/v3.1.11/libmodbus-3.1.11.tar.gz
+   ```
+
+   
+
+3. 解压文件，进入文件夹，并创建安装目录
+
+   ```shell
+   tar -zxvf libmodbus-3.1.11.tar.gz
+   cd libmodbus-3.1.11
+   mkidr install
+   ```
+
+   
+
+4. 配置编译选项
+
+   ```shell
+   ./configure --build=i386 --host=arm-linux-gnueabi --enable-static --prefix=/opt/t113/libmodbus/libmodbus/install/
+   ```
+
+   
+
+5. 编译
+
+   ```shell
+   make
+   ```
+
+   
+
+6. 安装
+
+   ```shell
+   make install
+   ```
+
