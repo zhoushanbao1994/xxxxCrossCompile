@@ -558,7 +558,7 @@ PC端使用“Modbus Salve”，与板子对测，正常
 1. 配置环境变量
 
    ```shell
-   export PATH=$PATH:/opt/rk3568/gcc-arm-10.3-2021.07-x86_64-aarch64-none-linux-gnu/bin/
+   export PATH=$PATH:/opt/rk3568/gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu/bin/
    
    aarch64-none-linux-gnu-g++ -v
    Using built-in specs.
