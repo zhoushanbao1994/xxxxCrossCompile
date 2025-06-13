@@ -51,7 +51,30 @@ https://github.com/open-source-parsers/jsoncpp/archive/refs/tags/1.9.5.tar.gz
    SET(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
    SET(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
    ```
-
+   
+   ```cmake
+   # 设置 CMAKE_SYSTEM_NAME 为 Linux，指的是编译代码的系统是 Linux，必须配置
+   SET(CMAKE_SYSTEM_NAME Linux)
+   # 设置 CMAKE_SYSTEM_PROCESSOR 为 arm，指的是运行的系统是在 arm 上面
+   SET(CMAKE_SYSTEM_PROCESSOR arm)
+   
+   # 定义 TOOLCHAIN_PATH ，供后续使用
+   SET(TOOLCHAIN_PATH /opt/t113/gcc-linaro-5.3.1-2016.05-x86_64_arm-linux-gnueabi)
+   #SET(CMAKE_SYSROOT ${TOOLCHAIN_PATH}/arm-linux-gnueabi)
+   # 指定C交叉编译器,必须配置
+   SET(CMAKE_C_COMPILER   ${TOOLCHAIN_PATH}/bin/arm-linux-gnueabi-gcc)
+   # 指定C++交叉编译器
+   SET(CMAKE_CXX_COMPILER ${TOOLCHAIN_PATH}/bin/arm-linux-gnueabi-g++)
+   
+   # search for programs in the build host directories
+   SET(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+   
+   # for libraries and headers in the target directories
+   SET(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+   SET(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+   SET(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
+   ```
+   
 5. 在“jsoncpp”下，创建文件夹“build”“install”
 
 6. 此时目录结构
